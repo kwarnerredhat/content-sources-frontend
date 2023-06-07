@@ -16,11 +16,15 @@ sudo npm run patch:hosts
 
 ## Getting started
 
-1. `npm install`
+1. Make sure [nvm](https://github.com/nvm-sh/nvm) is installed
 
-2. `PROXY=true npm run start`
+2. `npm install`
 
-3. With a browser, open URL listed in the terminal output
+3. `PROXY=true npm run start`
+
+4.  With a browser, open URL listed in the terminal output
+
+ 
 
 Update `config/dev.webpack.config.js` according to your application URL. [Read more](https://github.com/RedHatInsights/frontend-components/tree/master/packages/config#useproxy).
 
