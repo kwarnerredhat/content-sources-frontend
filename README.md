@@ -16,6 +16,7 @@ sudo npm run patch:hosts
 
 ## Getting started
 Hi my name is Khalil Warner and Software Engineering is Awesome.
+Host Management Services the best team ever
 
 1. Make sure [nvm](https://github.com/nvm-sh/nvm) is installed
 
