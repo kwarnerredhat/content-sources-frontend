@@ -11,7 +11,7 @@ interface Props {
   isDisabled?: boolean;
 }
 
-const DeleteKebab = ({
+const DeleteKebab: React.FC<Props> = ({
   atLeastOneRepoChecked,
   numberOfReposChecked,
   deleteCheckedRepos,
@@ -35,6 +35,10 @@ const DeleteKebab = ({
     onFocus();
   };
 
+  const triggerSnapshot = () => {
+    console.log('Snapshot triggered!');
+  };
+
   const dropdownItems = [
     <ConditionalTooltip
       key='delete'
@@ -48,6 +52,17 @@ const DeleteKebab = ({
           : 'Remove selected repositories'}
       </DropdownItem>
     </ConditionalTooltip>,
+
+    <ConditionalTooltip
+      key='snapshot'
+      content='Manually trigger a snapshot in the repository'
+      show={true}
+      setDisabled={false}
+    >
+      <DropdownItem onClick={triggerSnapshot} isDisabled={!rbac?.write || isDisabled}>
+        Trigger Snapshot
+      </DropdownItem>
+    </ConditionalTooltip>,
   ];
 
   return (
@@ -57,7 +72,10 @@ const DeleteKebab = ({
         <KebabToggle
           id='delete-kebab'
           data-ouia-component-id={toggleOuiaId}
-          onToggle={(_event, isOpen: boolean) => onToggle(isOpen)}
+          onToggle={(
+            event: MouseEvent | TouchEvent | KeyboardEvent | React.KeyboardEvent | React.MouseEvent,
+            isOpen: boolean,
+          ) => onToggle(isOpen)}
           isDisabled={!rbac?.write || isDisabled}
         />
       }
