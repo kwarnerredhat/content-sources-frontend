@@ -29,17 +29,7 @@ export default function Header() {
   return (
     <PageHeader>
       <PageHeaderTitle title='Repositories' />
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <Text className={classes.subtext} ouiaId='custom_repositories_description'>
-=======
-      <Text className={classes.subtext} ouiaId='repositories_description'>
->>>>>>> 71c33fb (Changed the header)
-=======
-      <Text className={classes.subtext} ouiaId='custom_repositories_description'>
->>>>>>> 352941a (Fixed the ouiaId)
-        View all repositories within your organization.
-      </Text>
+      <Text className={classes.subtext} ouiaId='custom_repositories_description'></Text>
     </PageHeader>
   );
 }
