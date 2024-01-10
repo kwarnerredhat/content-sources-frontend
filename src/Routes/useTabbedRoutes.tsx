@@ -4,6 +4,7 @@ import ViewPayloadModal from '../Pages/AdminTaskTable/components/ViewPayloadModa
 import ContentListTable from '../Pages/ContentListTable/ContentListTable';
 import AddContent from '../Pages/ContentListTable/components/AddContent/AddContent';
 import EditContentModal from '../Pages/ContentListTable/components/EditContentModal/EditContentModal';
+import DeleteContentModal from '../Pages/ContentListTable/components/DeleteContentModal/DeleteContentModal';
 import PackageModal from '../Pages/ContentListTable/components/PackageModal/PackageModal';
 import PopularRepositoriesTable from '../Pages/PopularRepositoriesTable/PopularRepositoriesTable';
 import { useAppContext } from '../middleware/AppContext';
@@ -36,6 +37,7 @@ export default function useTabbedRoutes(): TabbedRoute[] {
             ? [
                 { path: 'edit-repository', Element: EditContentModal },
                 { path: 'add-repository', Element: AddContent },
+                { path: 'delete-repository', Element: DeleteContentModal },
               ]
             : []),
           ...(features?.admintasks?.enabled && features.snapshots?.accessible

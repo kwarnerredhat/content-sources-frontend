@@ -72,7 +72,7 @@ const ContentListFilters = ({
   contentOrigin,
 }: Props) => {
   const classes = useStyles();
-  const { rbac } = useAppContext();
+  const { rbac, features } = useAppContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const filters = ['Name/URL', 'Version', 'Architecture', 'Status'];
@@ -272,34 +272,36 @@ const ContentListFilters = ({
           </InputGroupItem>
         </InputGroup>
       </FlexItem>
-      <FlexItem>
-        <ToggleGroup aria-label='Default with single selectable'>
-          <ToggleGroupItem
-            text='Custom'
-            buttonId='custom-repositories-toggle-button'
-            data-ouia-component-id='custom-repositories-toggle'
-            isSelected={contentOrigin === ContentOrigin.EXTERNAL}
-            onChange={() => {
-              if (contentOrigin !== ContentOrigin.EXTERNAL) {
-                setContentOrigin(ContentOrigin.EXTERNAL);
-                // clearFilters(); //This resets the filters when changing Origins if desired.
-              }
-            }}
-          />
-          <ToggleGroupItem
-            text='Red Hat'
-            buttonId='redhat-repositories-toggle-button'
-            data-ouia-component-id='redhat-repositories-toggle'
-            isSelected={contentOrigin === ContentOrigin.REDHAT}
-            onChange={() => {
-              if (contentOrigin !== ContentOrigin.REDHAT) {
-                setContentOrigin(ContentOrigin.REDHAT);
-                // clearFilters();//This resets the filters when changing Origins if desired.
-              }
-            }}
-          />
-        </ToggleGroup>
-      </FlexItem>
+      <Hide hide={!features?.snapshots?.accessible}>
+        <FlexItem>
+          <ToggleGroup aria-label='Default with single selectable'>
+            <ToggleGroupItem
+              text='Custom'
+              buttonId='custom-repositories-toggle-button'
+              data-ouia-component-id='custom-repositories-toggle'
+              isSelected={contentOrigin === ContentOrigin.EXTERNAL}
+              onChange={() => {
+                if (contentOrigin !== ContentOrigin.EXTERNAL) {
+                  setContentOrigin(ContentOrigin.EXTERNAL);
+                  // clearFilters(); //This resets the filters when changing Origins if desired.
+                }
+              }}
+            />
+            <ToggleGroupItem
+              text='Red Hat'
+              buttonId='redhat-repositories-toggle-button'
+              data-ouia-component-id='redhat-repositories-toggle'
+              isSelected={contentOrigin === ContentOrigin.REDHAT}
+              onChange={() => {
+                if (contentOrigin !== ContentOrigin.REDHAT) {
+                  setContentOrigin(ContentOrigin.REDHAT);
+                  // clearFilters();//This resets the filters when changing Origins if desired.
+                }
+              }}
+            />
+          </ToggleGroup>
+        </FlexItem>
+      </Hide>
       <FlexItem className={classes.repositoryActions}>
         <ConditionalTooltip
           content='You do not have the required permissions to perform this action.'

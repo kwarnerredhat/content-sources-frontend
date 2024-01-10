@@ -228,7 +228,13 @@ export default function SnapshotListModal() {
               <Tbody>
                 {snapshotsList.map(
                   (
-                    { uuid: snap_uuid, created_at, content_counts, added_counts, removed_counts }: SnapshotItem,
+                    {
+                      uuid: snap_uuid,
+                      created_at,
+                      content_counts,
+                      added_counts,
+                      removed_counts,
+                    }: SnapshotItem,
                     index: number,
                   ) => (
                     <Tr key={created_at + index}>
@@ -248,8 +254,8 @@ export default function SnapshotListModal() {
                       <Td>{content_counts?.['rpm.package'] || 0}</Td>
                       <Td>{content_counts?.['rpm.advisory'] || 0}</Td>
                       <Td>
-                        <RepoConfig repoUUID={uuid} snapUUID={snap_uuid}/>
-                        </Td>
+                        <RepoConfig repoUUID={uuid} snapUUID={snap_uuid} />
+                      </Td>
                     </Tr>
                   ),
                 )}

@@ -532,6 +532,7 @@ const AddContent = () => {
                           hasCheckIcon
                           label='Snapshot creation enabled'
                           labelOff='Snapshot creation disabled'
+                          ouiaId='snapshot_creation_toggle'
                           isChecked={snapshot}
                           onChange={() => {
                             updateVariable(index, { snapshot: !snapshot });

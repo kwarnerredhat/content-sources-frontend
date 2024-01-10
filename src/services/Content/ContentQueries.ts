@@ -307,6 +307,7 @@ export const useDeleteContentItemMutate = (
   page: number,
   perPage: number,
   filterData?: FilterData,
+  contentOrigin?: ContentOrigin,
   sortString?: string,
 ) => {
   // Below MUST match the "useContentList" key found above or updates will fail.
@@ -315,6 +316,7 @@ export const useDeleteContentItemMutate = (
     page,
     perPage,
     sortString,
+    contentOrigin,
     ...Object.values(filterData || {}),
   ];
   const errorNotifier = useErrorNotification();

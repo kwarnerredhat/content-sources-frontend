@@ -33,7 +33,7 @@ const RepoConfig = ({ repoUUID, snapUUID }: Props) => {
   const downloadConfigFile = async () => {
     const data = await mutateAsync();
     const element = document.createElement('a');
-    const file = new Blob([data], {type: 'text/plain'});
+    const file = new Blob([data], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
     element.download = 'config.repo';
     document.body.appendChild(element);
