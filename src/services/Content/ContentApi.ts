@@ -330,12 +330,22 @@ export const introspectRepository: (
   return data;
 };
 
-export const getRepoConfigFile: (
-    repo_uuid: string,
-    snapshot_uuid: string,
-) => Promise<string> = async (repo_uuid, snapshot_uuid) => {
-  const { data } =  await axios.get(
-      `/api/content-sources/v1/repositories/${repo_uuid}/snapshots/${snapshot_uuid}/config.repo`
+export const triggerSnapshot: (repositoryUUID: string) => Promise<void> = async (
+  repositoryUUID,
+) => {
+  const { data } = await axios.post(
+    `/api/content-sources/v1.0/repositories/${repositoryUUID}/snapshot/`,
+    {},
   );
   return data;
-}
+};
+
+export const getRepoConfigFile: (
+  repo_uuid: string,
+  snapshot_uuid: string,
+) => Promise<string> = async (repo_uuid, snapshot_uuid) => {
+  const { data } = await axios.get(
+    `/api/content-sources/v1/repositories/${repo_uuid}/snapshots/${snapshot_uuid}/config.repo`,
+  );
+  return data;
+};

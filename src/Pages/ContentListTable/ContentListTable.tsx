@@ -28,6 +28,7 @@ import {
   FilterData,
   IntrospectRepositoryRequestItem,
   ContentOrigin,
+  triggerSnapshot,
 } from '../../services/Content/ContentApi';
 import { SkeletonTable } from '@patternfly/react-component-groups';
 
@@ -284,6 +285,17 @@ const ContentListTable = () => {
                   },
                 ]
               : []),
+            {
+              isDisabled: actionTakingPlace || rowData?.status === 'Retrying',
+              title: 'Trigger Snapshot',
+              onClick: () => {
+                try {
+                  triggerSnapshot(rowData?.uuid);
+                } catch (error) {
+                  console.error('Error triggering snapshot:', error);
+                }
+              },
+            },
             {
               isDisabled: actionTakingPlace || rowData?.status == 'Retrying',
               title: 'Introspect Now',
