@@ -32,6 +32,7 @@ import {
   SnapshotListResponse,
   ContentOrigin,
   getRepoConfigFile,
+  triggerSnapshot,
 } from './ContentApi';
 import { ADMIN_TASK_LIST_KEY } from '../AdminTasks/AdminTaskQueries';
 import useErrorNotification from '../../Hooks/useErrorNotification';
@@ -513,6 +514,30 @@ export const useGetPackagesQuery = (
       },
     },
   );
+};
+export const useTriggerSnapshot = (queryClient: QueryClient, uuid: string, itemId: string) => {
+  const snapshotKeyArray = [CONTENT_LIST_KEY, itemId];
+  const errorNotifier = useErrorNotification();
+  const { notify } = useNotification();
+
+  return useMutation(triggerSnapshot, {
+    onSuccess: () => {
+      notify({
+        variant: AlertVariant.success,
+        title: 'Snapshot triggered successfully',
+      });
+      queryClient.invalidateQueries(CONTENT_LIST_KEY);
+    },
+    onError: (err, _newData, context) => {
+      if (context) {
+        const { previousData } = context as {
+          previousData: SnapshotListResponse;
+        };
+        queryClient.setQueryData(snapshotKeyArray, previousData);
+      }
+      errorNotifier('Error triggering snapshot', 'An error occurred', err);
+    },
+  });
 };
 
 export const useIntrospectRepositoryMutate = (

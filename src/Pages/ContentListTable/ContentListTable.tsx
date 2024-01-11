@@ -28,7 +28,6 @@ import {
   FilterData,
   IntrospectRepositoryRequestItem,
   ContentOrigin,
-  triggerSnapshot,
 } from '../../services/Content/ContentApi';
 import { SkeletonTable } from '@patternfly/react-component-groups';
 
@@ -167,6 +166,10 @@ const ContentListTable = () => {
 
   const introspectRepoForUuid = (uuid: string): Promise<void> =>
     introspectRepository({ uuid: uuid, reset_count: true } as IntrospectRepositoryRequestItem);
+
+  const triggerSnapshot = async (uuid: string): Promise<void> => {
+    console.log(`Triggering snapshot for uuid: ${uuid}`);
+  };
 
   const { mutateAsync: deleteItems, isLoading: isDeletingItems } = useBulkDeleteContentItemMutate(
     queryClient,
