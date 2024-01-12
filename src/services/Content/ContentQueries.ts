@@ -515,8 +515,8 @@ export const useGetPackagesQuery = (
     },
   );
 };
-export const useTriggerSnapshot = (queryClient: QueryClient, uuid: string, itemId: string) => {
-  const snapshotKeyArray = [CONTENT_LIST_KEY, itemId];
+export const useTriggerSnapshot = (queryClient: QueryClient) => {
+  const snapshotKeyArray = [CONTENT_LIST_KEY];
   const errorNotifier = useErrorNotification();
   const { notify } = useNotification();
 
