@@ -50,7 +50,6 @@ import ConditionalTooltip from '../../components/ConditionalTooltip/ConditionalT
 import dayjs from 'dayjs';
 import ChangedArrows from './components/SnapshotListModal/components/ChangedArrows';
 import { Outlet, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
-import {} from 'prop-types';
 
 const useStyles = createUseStyles({
   mainContainer: {
@@ -170,12 +169,14 @@ const ContentListTable = () => {
     introspectRepository({ uuid: uuid, reset_count: true } as IntrospectRepositoryRequestItem);
 
   const { mutateAsync: triggerSnapshotMutation } = useTriggerSnapshot(queryClient);
-  triggerSnapshotMutation;
-  const { mutateAsync: introspectSnapshotMutation } = useTriggerSnapshot(queryClient);
-  introspectSnapshotMutation;
 
   const triggerSnapshot = async (uuid: string): Promise<void> => {
-    console.log(`Triggering snapshot for uuid: ${uuid}`);
+    try {
+      const result = await triggerSnapshotMutation(uuid);
+      console.log('Snapshot triggered successfully', result);
+    } catch (error) {
+      console.error('Error triggering snapshot', error);
+    }
   };
 
   const { mutateAsync: deleteItems, isLoading: isDeletingItems } = useBulkDeleteContentItemMutate(
@@ -292,7 +293,7 @@ const ContentListTable = () => {
               title: 'Trigger Snapshot',
               onClick: () => {
                 try {
-                  triggerSnapshot(rowData?.uuid);
+                  triggerSnapshot(rowData.uuid);
                 } catch (error) {
                   console.error('Error triggering snapshot:', error);
                 }
