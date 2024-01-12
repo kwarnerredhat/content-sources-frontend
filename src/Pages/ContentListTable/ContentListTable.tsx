@@ -36,6 +36,7 @@ import {
   useContentListQuery,
   useIntrospectRepositoryMutate,
   useRepositoryParams,
+  useTriggerSnapshot,
 } from '../../services/Content/ContentQueries';
 import ContentListFilters from './components/ContentListFilters';
 import Hide from '../../components/Hide/Hide';
@@ -49,6 +50,7 @@ import ConditionalTooltip from '../../components/ConditionalTooltip/ConditionalT
 import dayjs from 'dayjs';
 import ChangedArrows from './components/SnapshotListModal/components/ChangedArrows';
 import { Outlet, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
+import {} from 'prop-types';
 
 const useStyles = createUseStyles({
   mainContainer: {
@@ -166,6 +168,11 @@ const ContentListTable = () => {
 
   const introspectRepoForUuid = (uuid: string): Promise<void> =>
     introspectRepository({ uuid: uuid, reset_count: true } as IntrospectRepositoryRequestItem);
+
+  const { mutateAsync: triggerSnapshotMutation } = useTriggerSnapshot(queryClient);
+  triggerSnapshotMutation;
+  const { mutateAsync: introspectSnapshotMutation } = useTriggerSnapshot(queryClient);
+  introspectSnapshotMutation;
 
   const triggerSnapshot = async (uuid: string): Promise<void> => {
     console.log(`Triggering snapshot for uuid: ${uuid}`);
