@@ -516,10 +516,8 @@ export const useGetPackagesQuery = (
   );
 };
 export const useTriggerSnapshot = (queryClient: QueryClient) => {
-  const snapshotKeyArray = [CONTENT_LIST_KEY];
   const errorNotifier = useErrorNotification();
   const { notify } = useNotification();
-
   return useMutation(triggerSnapshot, {
     onSuccess: () => {
       notify({
@@ -528,13 +526,7 @@ export const useTriggerSnapshot = (queryClient: QueryClient) => {
       });
       queryClient.invalidateQueries(CONTENT_LIST_KEY);
     },
-    onError: (err, _newData, context) => {
-      if (context) {
-        const { previousData } = context as {
-          previousData: SnapshotListResponse;
-        };
-        queryClient.setQueryData(snapshotKeyArray, previousData);
-      }
+    onError: (err) => {
       errorNotifier('Error triggering snapshot', 'An error occurred', err);
     },
   });
