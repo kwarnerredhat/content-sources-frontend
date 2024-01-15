@@ -20,6 +20,7 @@ jest.mock('../../services/Content/ContentQueries', () => ({
   useBulkDeleteContentItemMutate: () => ({ isLoading: false }),
   useIntrospectRepositoryMutate: () => ({ isLoading: false }),
   useFetchGpgKey: () => ({ fetchGpgKey: () => '' }),
+  useTriggerSnapshot: () => ({ isLoading: false }),
 }));
 
 jest.mock('../../middleware/AppContext', () => ({

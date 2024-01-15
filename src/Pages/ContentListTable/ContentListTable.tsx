@@ -171,12 +171,7 @@ const ContentListTable = () => {
   const { mutateAsync: triggerSnapshotMutation } = useTriggerSnapshot(queryClient);
 
   const triggerSnapshot = async (uuid: string): Promise<void> => {
-    try {
-      const result = await triggerSnapshotMutation(uuid);
-      console.log('Snapshot triggered successfully', result);
-    } catch (error) {
-      console.error('Error triggering snapshot', error);
-    }
+    triggerSnapshotMutation(uuid);
   };
 
   const { mutateAsync: deleteItems, isLoading: isDeletingItems } = useBulkDeleteContentItemMutate(
@@ -292,11 +287,7 @@ const ContentListTable = () => {
               isDisabled: actionTakingPlace || rowData?.status === 'Retrying',
               title: 'Trigger Snapshot',
               onClick: () => {
-                try {
-                  triggerSnapshot(rowData.uuid);
-                } catch (error) {
-                  console.error('Error triggering snapshot:', error);
-                }
+                triggerSnapshot(rowData.uuid);
               },
             },
             {
