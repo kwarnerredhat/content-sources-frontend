@@ -281,15 +281,15 @@ const ContentListTable = () => {
                       navigate(`${rowData.uuid}/snapshots`);
                     },
                   },
+                  {
+                    isDisabled: actionTakingPlace || rowData?.status === 'Retrying',
+                    title: 'Trigger Snapshot',
+                    onClick: () => {
+                      triggerSnapshot(rowData.uuid);
+                    },
+                  },
                 ]
               : []),
-            {
-              isDisabled: actionTakingPlace || rowData?.status === 'Retrying',
-              title: 'Trigger Snapshot',
-              onClick: () => {
-                triggerSnapshot(rowData.uuid);
-              },
-            },
             {
               isDisabled: actionTakingPlace || rowData?.status == 'Retrying',
               title: 'Introspect Now',

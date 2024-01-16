@@ -515,6 +515,7 @@ export const useGetPackagesQuery = (
     },
   );
 };
+
 export const useTriggerSnapshot = (queryClient: QueryClient) => {
   const errorNotifier = useErrorNotification();
   const { notify } = useNotification();
