@@ -5,7 +5,7 @@ import {
   defaultSnapshotItem,
   testRepositoryParamsResponse,
 } from '../../testingHelpers';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import ContentListTable from './ContentListTable';
 import { useContentListQuery, useRepositoryParams } from '../../services/Content/ContentQueries';
 import AddContent from './components/AddContent/AddContent';
@@ -89,7 +89,8 @@ it('Render with a single row', () => {
       meta: { count: 1, limit: 20, offset: 0 },
     },
   }));
-
+});
+test('should trigger snapshot when kebab is clicked', async () => {
   const { queryByText } = render(
     <ReactQueryTestWrapper>
       <ContentListTable />
@@ -121,6 +122,10 @@ it('Render with a single row', () => {
       ),
     ).toBeInTheDocument(),
   );
+  waitFor(() => {
+    const kebabButton = screen.getByRole('kebab', { name: 'kebabButton' });
+    fireEvent.click(kebabButton);
+  });
 });
 
 it('Render with a single redhat repository', () => {
