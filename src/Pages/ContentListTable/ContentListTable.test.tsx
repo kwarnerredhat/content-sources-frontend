@@ -90,7 +90,7 @@ it('Render with a single row', () => {
     },
   }));
 });
-test('should trigger snapshot when kebab is clicked', async () => {
+it('should trigger snapshot when kebab is clicked', async () => {
   const { queryByText } = render(
     <ReactQueryTestWrapper>
       <ContentListTable />
