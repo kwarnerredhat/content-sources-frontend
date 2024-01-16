@@ -126,6 +126,9 @@ test('should trigger snapshot when kebab is clicked', async () => {
     const kebabButton = screen.getByRole('kebab', { name: 'kebabButton' });
     fireEvent.click(kebabButton);
   });
+  waitFor(() => {
+    expect(queryByText('Trigger Snapshot')).toBeInTheDocument();
+  });
 });
 
 it('Render with a single redhat repository', () => {
