@@ -10,6 +10,7 @@ import {
   TextInput,
   InputGroupItem,
   InputGroupText,
+  Chip,
 } from '@patternfly/react-core';
 import {
   Table /* data-codemods */,
@@ -61,6 +62,14 @@ import {
 } from '@patternfly/react-core/deprecated';
 
 const useStyles = createUseStyles({
+  clearFiltersChip: {
+    backgroundColor: '#007BFF',
+    color: '#FFFFFF',
+    cursor: 'pointer',
+    padding: '8px',
+    borderRadius: '4px',
+    marginLeft: '8px',
+  },
   mainContainer: {
     backgroundColor: global_BackgroundColor_100.value,
     display: 'flex',
@@ -128,6 +137,12 @@ const PopularRepositoriesTable = () => {
   const debouncedSearchValue = useDebounce(searchValue);
   const [perPage, setPerPage] = useState(storedPerPage);
   const [isActionOpen, setIsActionOpen] = useState(false);
+  const [filterData, setFilterData] = useState<FilterData>({
+    searchQuery: '',
+    versions: [],
+    arches: [],
+    statuses: [],
+  });
 
   const onDropdownToggle = (_, isActionOpen: boolean) => {
     setIsActionOpen(isActionOpen);
@@ -343,6 +358,10 @@ const PopularRepositoriesTable = () => {
 
   const countIsZero = !data?.data?.length;
 
+  const clearFilters = () =>
+    setFilterData({ searchQuery: '', versions: [], arches: [], statuses: [] });
+  setSearchValue('');
+
   return (
     <Grid
       data-ouia-safe={!actionTakingPlace}
@@ -466,6 +485,17 @@ const PopularRepositoriesTable = () => {
               isCompact
               onPerPageSelect={onPerPageSelect}
             />
+            <Hide
+              hide={
+                !debouncedSearchValue &&
+                filterData.versions.length === 0 &&
+                filterData.arches.length === 0
+              }
+            >
+              <Chip onClick={clearFilters} className={classes.clearFiltersChip}>
+                Clear Filters
+              </Chip>
+            </Hide>
           </Hide>
         </FlexItem>
       </Flex>
@@ -597,7 +627,7 @@ const PopularRepositoriesTable = () => {
       </Hide>
       <Hide hide={!countIsZero}>
         <EmptyTableState
-          clearFilters={() => setSearchValue('')}
+          clearFilters={clearFilters}
           notFiltered={!debouncedSearchValue} // The second item prevents the clear button from being removed abruptly
           itemName='popular repositories'
         />
