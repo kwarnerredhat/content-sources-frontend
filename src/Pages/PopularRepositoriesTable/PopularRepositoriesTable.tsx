@@ -10,7 +10,6 @@ import {
   TextInput,
   InputGroupItem,
   InputGroupText,
-  Chip,
 } from '@patternfly/react-core';
 import {
   Table /* data-codemods */,
@@ -63,8 +62,8 @@ import {
 
 const useStyles = createUseStyles({
   clearFiltersChip: {
-    backgroundColor: '#007BFF',
-    color: '#FFFFFF',
+    backgroundColor: '#FFFFFF',
+    color: '#0096FF',
     cursor: 'pointer',
     padding: '8px',
     borderRadius: '4px',
@@ -137,12 +136,6 @@ const PopularRepositoriesTable = () => {
   const debouncedSearchValue = useDebounce(searchValue);
   const [perPage, setPerPage] = useState(storedPerPage);
   const [isActionOpen, setIsActionOpen] = useState(false);
-  const [filterData, setFilterData] = useState<FilterData>({
-    searchQuery: '',
-    versions: [],
-    arches: [],
-    statuses: [],
-  });
 
   const onDropdownToggle = (_, isActionOpen: boolean) => {
     setIsActionOpen(isActionOpen);
@@ -358,9 +351,9 @@ const PopularRepositoriesTable = () => {
 
   const countIsZero = !data?.data?.length;
 
-  const clearFilters = () =>
-    setFilterData({ searchQuery: '', versions: [], arches: [], statuses: [] });
-  setSearchValue('');
+  function clearFilters(): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <Grid
@@ -385,6 +378,14 @@ const PopularRepositoriesTable = () => {
                 <SearchIcon />
               </InputGroupText>
             </InputGroupItem>
+            <Button
+              className={classes.clearFiltersChip}
+              onClick={clearFilters}
+              variant='link'
+              isInline
+            >
+              Clear filters
+            </Button>
             <InputGroupItem>
               <FlexItem className={classes.repositoryActions}>
                 {/* RBAC popover takes precedence */}
@@ -485,17 +486,7 @@ const PopularRepositoriesTable = () => {
               isCompact
               onPerPageSelect={onPerPageSelect}
             />
-            <Hide
-              hide={
-                !debouncedSearchValue &&
-                filterData.versions.length === 0 &&
-                filterData.arches.length === 0
-              }
-            >
-              <Chip onClick={clearFilters} className={classes.clearFiltersChip}>
-                Clear Filters
-              </Chip>
-            </Hide>
+            <Hide hide={!debouncedSearchValue}></Hide>
           </Hide>
         </FlexItem>
       </Flex>
@@ -627,7 +618,7 @@ const PopularRepositoriesTable = () => {
       </Hide>
       <Hide hide={!countIsZero}>
         <EmptyTableState
-          clearFilters={clearFilters}
+          clearFilters={() => setSearchValue('')}
           notFiltered={!debouncedSearchValue} // The second item prevents the clear button from being removed abruptly
           itemName='popular repositories'
         />
