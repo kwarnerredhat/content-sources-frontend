@@ -61,7 +61,6 @@ import {
   DropdownToggle,
   DropdownToggleAction,
 } from '@patternfly/react-core/deprecated';
-import { Filters } from '../ContentListTable/components/ContentListFilters';
 
 const useStyles = createUseStyles({
   clearFilters: {
@@ -137,7 +136,6 @@ const PopularRepositoriesTable = () => {
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<Filters>('Name/URL');
   const debouncedSearchValue = useDebounce(searchValue);
   const [perPage, setPerPage] = useState(storedPerPage);
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -357,14 +355,10 @@ const PopularRepositoriesTable = () => {
   const countIsZero = !data?.data?.length;
 
   const clearFilters = () => {
-    setFilterType('Name/URL');
     setSearchValue('');
     setSearchQuery('');
   };
 
-  switch (filterType) {
-    case 'Name/URL':
-  }
   return (
     <Grid
       data-ouia-safe={!actionTakingPlace}
@@ -474,17 +468,22 @@ const PopularRepositoriesTable = () => {
               </FlexItem>
             </InputGroupItem>
           </InputGroup>
-          {searchQuery !== '' && (
-            <ChipGroup categoryName='Name/URL'>
-              <Chip key='search_chip' onClick={() => setSearchQuery('')}>
-                {searchQuery}
-              </Chip>
-            </ChipGroup>
-          )}
-          {(debouncedSearchValue !== '' && searchQuery !== '') || (
-            <Button className={classes.clearFilters} onClick={clearFilters} variant='link' isInline>
-              Clear filters
-            </Button>
+          {(debouncedSearchValue !== '' || searchQuery !== '') && (
+            <Flex>
+              <ChipGroup categoryName='Name/URL'>
+                <Chip key='search_chip' onClick={() => setSearchQuery('')}>
+                  {searchQuery}
+                </Chip>
+              </ChipGroup>
+              <Button
+                className={classes.clearFilters}
+                onClick={clearFilters}
+                variant='link'
+                isInline
+              >
+                Clear filters
+              </Button>
+            </Flex>
           )}
         </FlexItem>
         <FlexItem>
