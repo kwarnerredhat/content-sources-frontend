@@ -74,6 +74,8 @@ const useStyles = createUseStyles({
   chipsContainer: {
     backgroundColor: global_BackgroundColor_100.value,
     paddingTop: '16px',
+    display: 'flex',
+    alignItems: 'center',
   },
   mainContainer: {
     backgroundColor: global_BackgroundColor_100.value,
