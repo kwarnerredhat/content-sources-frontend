@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import {
   ReactQueryTestWrapper,
   defaultPopularRepository,
@@ -30,54 +30,66 @@ it('expect PopularRepositoriesTable to render with add one item', () => {
     data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
   }));
 
-  const { queryByText } = render(
-    <ReactQueryTestWrapper>
-      <PopularRepositoriesTable />
-    </ReactQueryTestWrapper>,
-  );
+  it('clears filters when "Clear Filters" button is clicked', async () => {
+    (useRepositoryParams as jest.Mock).mockImplementation(() => ({
+      isLoading: false,
+      data: testRepositoryParamsResponse,
+    }));
 
-  expect(queryByText(defaultPopularRepository.suggested_name)).toBeInTheDocument();
-  expect(queryByText(defaultPopularRepository.url)).toBeInTheDocument();
-  expect(queryByText('Add')).toBeInTheDocument();
-});
+    const { queryByText } = render(
+      <ReactQueryTestWrapper>
+        <PopularRepositoriesTable />
+      </ReactQueryTestWrapper>,
+    );
 
-it('expect PopularRepositoriesTable to render with remove one item', () => {
-  (useRepositoryParams as jest.Mock).mockImplementation(() => ({ isLoading: false }));
-  (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
-    isLoading: false,
-    data: {
-      data: [{ ...defaultPopularRepository, uuid: 'ifThisExistsThanButtonIsRemove' }],
-      meta: { count: 1, limit: 20, offset: 0 },
-    },
-  }));
-
-  const { queryByText } = render(
-    <ReactQueryTestWrapper>
-      <PopularRepositoriesTable />
-    </ReactQueryTestWrapper>,
-  );
-
-  waitFor(() => {
     expect(queryByText(defaultPopularRepository.suggested_name)).toBeInTheDocument();
     expect(queryByText(defaultPopularRepository.url)).toBeInTheDocument();
-    expect(queryByText('Remove')).toBeInTheDocument();
+    expect(queryByText('Add')).toBeInTheDocument();
   });
-});
 
-it('Render a loading state checking search disabled', () => {
-  (useRepositoryParams as jest.Mock).mockImplementation(() => ({
-    isLoading: false,
-    data: testRepositoryParamsResponse,
-  }));
-  (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
-    isLoading: true,
-  }));
+  it('expect PopularRepositoriesTable to render with remove one item', () => {
+    (useRepositoryParams as jest.Mock).mockImplementation(() => ({ isLoading: false }));
+    (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
+      isLoading: false,
+      data: {
+        data: [{ ...defaultPopularRepository, uuid: 'ifThisExistsThanButtonIsRemove' }],
+        meta: { count: 1, limit: 20, offset: 0 },
+      },
+    }));
 
-  const { queryByPlaceholderText } = render(
-    <ReactQueryTestWrapper>
-      <PopularRepositoriesTable />
-    </ReactQueryTestWrapper>,
-  );
+    const { queryByText } = render(
+      <ReactQueryTestWrapper>
+        <PopularRepositoriesTable />
+      </ReactQueryTestWrapper>,
+    );
 
-  expect(queryByPlaceholderText('Filter by name/url')).toHaveAttribute('disabled');
+    waitFor(() => {
+      expect(queryByText(defaultPopularRepository.suggested_name)).toBeInTheDocument();
+      expect(queryByText(defaultPopularRepository.url)).toBeInTheDocument();
+      expect(queryByText('Remove')).toBeInTheDocument();
+    });
+  });
+
+  it('Render a loading state checking search disabled', () => {
+    (useRepositoryParams as jest.Mock).mockImplementation(() => ({
+      isLoading: false,
+      data: testRepositoryParamsResponse,
+    }));
+    (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
+      isLoading: true,
+    }));
+
+    const { queryByPlaceholderText, getByText } = render(
+      <ReactQueryTestWrapper>
+        <PopularRepositoriesTable />
+      </ReactQueryTestWrapper>,
+    );
+
+    expect(queryByPlaceholderText('Filter by name/url')).toHaveAttribute('disabled');
+
+    const filterInput = queryByPlaceholderText('Filter by name/url');
+    expect(filterInput).toHaveValue('some filter text');
+    const clearFiltersButton = getByText('Clear Filters');
+    fireEvent.click(clearFiltersButton);
+  });
 });
