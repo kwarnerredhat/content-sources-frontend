@@ -71,6 +71,10 @@ const useStyles = createUseStyles({
     borderRadius: '4px',
     marginLeft: '8px',
   },
+  chipsContainer: {
+    backgroundColor: global_BackgroundColor_100.value,
+    paddingTop: '16px',
+  },
   mainContainer: {
     backgroundColor: global_BackgroundColor_100.value,
     display: 'flex',
@@ -470,19 +474,21 @@ const PopularRepositoriesTable = () => {
           </InputGroup>
           {(debouncedSearchValue !== '' || searchQuery !== '') && (
             <Flex>
-              <ChipGroup categoryName='Name/URL'>
-                <Chip key='search_chip' onClick={() => setSearchQuery('')}>
-                  {searchQuery}
-                </Chip>
-              </ChipGroup>
-              <Button
-                className={classes.clearFilters}
-                onClick={clearFilters}
-                variant='link'
-                isInline
-              >
-                Clear filters
-              </Button>
+              <FlexItem fullWidth={{ default: 'fullWidth' }} className={classes.chipsContainer}>
+                <ChipGroup categoryName='Name/URL'>
+                  <Chip key='search_chip' onClick={() => setSearchQuery('')}>
+                    {searchQuery}
+                  </Chip>
+                </ChipGroup>
+                <Button
+                  className={classes.clearFilters}
+                  onClick={clearFilters}
+                  variant='link'
+                  isInline
+                >
+                  Clear filters
+                </Button>
+              </FlexItem>
             </Flex>
           )}
         </FlexItem>
