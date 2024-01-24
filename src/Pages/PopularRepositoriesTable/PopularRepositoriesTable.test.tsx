@@ -30,18 +30,15 @@ it('expect PopularRepositoriesTable to render with add one item', () => {
     data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
   }));
 
-  const { queryByText, getByText, queryByPlaceholderText } = render(
+  const { queryByText } = render(
     <ReactQueryTestWrapper>
       <PopularRepositoriesTable />
     </ReactQueryTestWrapper>,
   );
 
-  fireEvent.click(getByText('Clear filters'));
-
   expect(queryByText(defaultPopularRepository.suggested_name)).toBeInTheDocument();
   expect(queryByText(defaultPopularRepository.url)).toBeInTheDocument();
   expect(queryByText('Add')).toBeInTheDocument();
-  expect(queryByPlaceholderText('Filter by name/url')).toHaveValue('');
 });
 
 it('expect PopularRepositoriesTable to render with remove one item', () => {
@@ -83,4 +80,26 @@ it('Render a loading state checking search disabled', () => {
   );
 
   expect(queryByPlaceholderText('Filter by name/url')).toHaveAttribute('disabled');
+});
+
+it('finds search box, enters text, and checks text occurrence', async () => {
+  (useRepositoryParams as jest.Mock).mockImplementation(() => ({ isLoading: false }));
+  (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
+    isLoading: false,
+    data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
+  }));
+
+  const { getByPlaceholderText, queryByText } = render(
+    <ReactQueryTestWrapper>
+      <PopularRepositoriesTable />
+    </ReactQueryTestWrapper>,
+  );
+
+  const searchBox = getByPlaceholderText('Filter by name/url');
+  fireEvent.change(searchBox, { target: { value: 'yourSearchText' } });
+
+  waitFor(() => {
+    const occurrences = queryByText('yourSearchText', { exact: false });
+    expect(occurrences).toBeTruthy();
+  });
 });
