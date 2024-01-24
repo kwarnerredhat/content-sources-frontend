@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import {
   ReactQueryTestWrapper,
   defaultPopularRepository,
@@ -30,15 +30,18 @@ it('expect PopularRepositoriesTable to render with add one item', () => {
     data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
   }));
 
-  const { queryByText } = render(
+  const { queryByText, getByText, queryByPlaceholderText } = render(
     <ReactQueryTestWrapper>
       <PopularRepositoriesTable />
     </ReactQueryTestWrapper>,
   );
 
+  fireEvent.click(getByText('Clear filters'));
+
   expect(queryByText(defaultPopularRepository.suggested_name)).toBeInTheDocument();
   expect(queryByText(defaultPopularRepository.url)).toBeInTheDocument();
   expect(queryByText('Add')).toBeInTheDocument();
+  expect(queryByPlaceholderText('Filter by name/url')).toHaveValue('');
 });
 
 it('expect PopularRepositoriesTable to render with remove one item', () => {

@@ -63,19 +63,14 @@ import {
 } from '@patternfly/react-core/deprecated';
 
 const useStyles = createUseStyles({
-  clearFilters: {
-    backgroundColor: '#FFFFFF',
-    color: '#0096FF',
-    cursor: 'pointer',
-    padding: '8px',
-    borderRadius: '4px',
-    marginLeft: '8px',
-  },
   chipsContainer: {
     backgroundColor: global_BackgroundColor_100.value,
     paddingTop: '16px',
     display: 'flex',
     alignItems: 'center',
+  },
+  clearFilters: {
+    marginLeft: '16px',
   },
   mainContainer: {
     backgroundColor: global_BackgroundColor_100.value,
@@ -377,12 +372,11 @@ const PopularRepositoriesTable = () => {
             <InputGroupItem isFill>
               <TextInput
                 isDisabled={isLoading}
-                type='text'
                 id='search'
-                ouiaId='popular_filter_search'
+                ouiaId='filter_search'
                 placeholder='Filter by name/url'
-                value={searchValue}
-                onChange={(_event, val) => setSearchValue(val)}
+                value={searchQuery}
+                onChange={(_event, value) => setSearchQuery(value)}
               />
               <InputGroupText isDisabled={isLoading} id='search-icon'>
                 <SearchIcon />
