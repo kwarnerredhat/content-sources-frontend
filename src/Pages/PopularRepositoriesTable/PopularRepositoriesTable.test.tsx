@@ -89,7 +89,7 @@ it('finds search box, enters text, and checks text occurrence', async () => {
     data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
   }));
 
-  const { getByPlaceholderText, queryByText } = render(
+  const { getByPlaceholderText, queryAllByText } = render(
     <ReactQueryTestWrapper>
       <PopularRepositoriesTable />
     </ReactQueryTestWrapper>,
@@ -99,7 +99,8 @@ it('finds search box, enters text, and checks text occurrence', async () => {
   fireEvent.change(searchBox, { target: { value: 'yourSearchText' } });
 
   waitFor(() => {
-    const occurrences = queryByText('yourSearchText', { exact: false });
+    const occurrences = queryAllByText('yourSearchText', { exact: false });
     expect(occurrences).toBeTruthy();
+    expect(occurrences.length).toBe(2);
   });
 });
