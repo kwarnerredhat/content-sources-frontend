@@ -98,10 +98,5 @@ it('finds search box, enters text, and checks text occurrence', async () => {
   const searchBox = getByPlaceholderText('Filter by name/url');
   fireEvent.change(searchBox, { target: { value: 'yourSearchText' } });
 
-  await waitFor(() => {
-    return queryAllByText('yourSearchText', { exact: false }).length === 2;
-    const occurrences = queryAllByText('yourSearchText', { exact: false });
-    expect(occurrences).toBeTruthy();
-    expect(occurrences.length).toBe(2);
-  });
+  await waitFor(() => queryAllByText('yourSearchText', { exact: false }).length === 2);
 });
