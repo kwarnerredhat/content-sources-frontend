@@ -82,7 +82,7 @@ it('Render a loading state checking search disabled', () => {
   expect(queryByPlaceholderText('Filter by name/url')).toHaveAttribute('disabled');
 });
 
-it('finds search box, enters text, and checks text occurrence', async () => {
+it('finds search box, enters text, and checks text occurrence', () => {
   (useRepositoryParams as jest.Mock).mockImplementation(() => ({ isLoading: false }));
   (usePopularRepositoriesQuery as jest.Mock).mockImplementation(() => ({
     isLoading: false,
