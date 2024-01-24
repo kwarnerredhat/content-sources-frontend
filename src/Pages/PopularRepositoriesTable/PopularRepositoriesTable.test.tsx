@@ -89,7 +89,7 @@ it('finds search box, enters text, and checks text occurrence', async () => {
     data: { data: [defaultPopularRepository], meta: { count: 1, limit: 20, offset: 0 } },
   }));
 
-  const { getByPlaceholderText, queryAllByText } = render(
+  const { getByPlaceholderText, queryAllByText, getByText, queryByText } = render(
     <ReactQueryTestWrapper>
       <PopularRepositoriesTable />
     </ReactQueryTestWrapper>,
@@ -98,5 +98,17 @@ it('finds search box, enters text, and checks text occurrence', async () => {
   const searchBox = getByPlaceholderText('Filter by name/url');
   fireEvent.change(searchBox, { target: { value: 'yourSearchText' } });
 
-  await waitFor(() => queryAllByText('yourSearchText', { exact: false }).length === 2);
+  await waitFor(() => {
+    const occurrences = queryAllByText('yourSearchText', { exact: false });
+    console.log('Rendered occurrences:', occurrences);
+    expect(occurrences.length).toBe(1);
+
+    const clearFiltersButton = getByText('Clear filters');
+    fireEvent.click(clearFiltersButton);
+  });
+
+  await waitFor(() => {
+    const chip = queryByText('yourSearchText');
+    expect(chip).toBeNull();
+  });
 });
