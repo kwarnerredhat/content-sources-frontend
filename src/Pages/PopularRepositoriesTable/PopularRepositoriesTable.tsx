@@ -358,6 +358,7 @@ const PopularRepositoriesTable = () => {
   const clearFilters = () => {
     setSearchValue('');
     setSearchQuery('');
+    setSearchQuery('');
   };
 
   return (
