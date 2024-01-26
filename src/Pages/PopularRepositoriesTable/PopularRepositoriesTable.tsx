@@ -366,8 +366,9 @@ const PopularRepositoriesTable = () => {
             <InputGroupItem isFill>
               <TextInput
                 isDisabled={isLoading}
+                type='text'
                 id='search'
-                ouiaId='filter_search'
+                ouiaId='popular_filter_search'
                 placeholder='Filter by name/url'
                 value={searchValue}
                 onChange={(_event, val) => setSearchValue(val)}
