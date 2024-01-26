@@ -136,7 +136,6 @@ const PopularRepositoriesTable = () => {
   const storedPerPage = Number(localStorage.getItem(perPageKey)) || 20;
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchValue = useDebounce(searchValue);
   const [perPage, setPerPage] = useState(storedPerPage);
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -355,12 +354,6 @@ const PopularRepositoriesTable = () => {
 
   const countIsZero = !data?.data?.length;
 
-  const clearFilters = () => {
-    setSearchValue('');
-    setSearchQuery('');
-    setSearchQuery('');
-  };
-
   return (
     <Grid
       data-ouia-safe={!actionTakingPlace}
@@ -376,8 +369,8 @@ const PopularRepositoriesTable = () => {
                 id='search'
                 ouiaId='filter_search'
                 placeholder='Filter by name/url'
-                value={searchQuery}
-                onChange={(_event, value) => setSearchQuery(value)}
+                value={searchValue}
+                onChange={(_event, val) => setSearchValue(val)}
               />
               <InputGroupText isDisabled={isLoading} id='search-icon'>
                 <SearchIcon />
@@ -469,17 +462,17 @@ const PopularRepositoriesTable = () => {
               </FlexItem>
             </InputGroupItem>
           </InputGroup>
-          {(debouncedSearchValue !== '' || searchQuery !== '') && (
+          {searchValue !== '' && (
             <Flex>
               <FlexItem fullWidth={{ default: 'fullWidth' }} className={classes.chipsContainer}>
                 <ChipGroup categoryName='Name/URL'>
-                  <Chip key='search_chip' onClick={() => setSearchQuery('')}>
-                    {searchQuery}
+                  <Chip key='search_chip' onClick={() => setSearchValue('')}>
+                    {searchValue}
                   </Chip>
                 </ChipGroup>
                 <Button
                   className={classes.clearFilters}
-                  onClick={clearFilters}
+                  onClick={() => setSearchValue('')}
                   variant='link'
                   isInline
                 >
