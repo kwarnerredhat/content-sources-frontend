@@ -9,6 +9,7 @@ import PackageModal from '../Pages/ContentListTable/components/PackageModal/Pack
 import PopularRepositoriesTable from '../Pages/PopularRepositoriesTable/PopularRepositoriesTable';
 import { useAppContext } from '../middleware/AppContext';
 import SnapshotListModal from '../Pages/ContentListTable/components/SnapshotListModal/SnapshotListModal';
+import SnapshotPackageModal from '../Pages/ContentListTable/components/SnapshotPackageModal/SnapshotPackageModal';
 
 export const DEFAULT_ROUTE = '';
 export const POPULAR_REPOSITORIES_ROUTE = 'popular-repositories';
@@ -41,7 +42,10 @@ export default function useTabbedRoutes(): TabbedRoute[] {
               ]
             : []),
           ...(features?.snapshots?.enabled && features.snapshots?.accessible
-            ? [{ path: ':repoUUID/snapshots', Element: SnapshotListModal }]
+            ? [
+                { path: ':repoUUID/snapshots', Element: SnapshotListModal },
+                { path: ':repoUUID/snapshots/:snapshotUUID', Element: SnapshotPackageModal },
+              ]
             : []),
           { path: ':repoUUID/packages', Element: PackageModal },
         ],

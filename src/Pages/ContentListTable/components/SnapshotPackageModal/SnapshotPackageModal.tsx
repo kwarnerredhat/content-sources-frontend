@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Flex,
@@ -14,7 +15,7 @@ import {
 } from '@patternfly/react-core';
 import {
   InnerScrollContainer,
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Tbody,
   Td,
@@ -24,24 +25,21 @@ import {
   Tr,
 } from '@patternfly/react-table';
 import { global_BackgroundColor_100, global_Color_200 } from '@patternfly/react-tokens';
-import { useEffect, useMemo, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { SkeletonTable } from '@patternfly/react-component-groups';
 import Hide from '../../../../components/Hide/Hide';
-import { ContentOrigin, SnapshotItem } from '../../../../services/Content/ContentApi';
-import { useFetchContent, useGetSnapshotList } from '../../../../services/Content/ContentQueries';
+import { ContentOrigin, PackageItem } from '../../../../services/Content/ContentApi';
+import { useGetPackagesQuery } from '../../../../services/Content/ContentQueries';
+import { SearchIcon } from '@patternfly/react-icons';
 import useDebounce from '../../../../Hooks/useDebounce';
 import { useNavigate, useParams } from 'react-router-dom';
 import useRootPath from '../../../../Hooks/useRootPath';
-import EmptyPackageState from '../PackageModal/components/EmptyPackageState';
-import ChangedArrows from './components/ChangedArrows';
-import { SearchIcon } from '@patternfly/react-icons';
 import { useAppContext } from '../../../../middleware/AppContext';
-import RepoConfig from './components/RepoConfig';
+import EmptyPackageState from '../PackageModal/components/EmptyPackageState';
 
 const useStyles = createUseStyles({
   description: {
-    paddingTop: '12px', // 4px on the title bottom padding makes this the "standard" 16 total padding
+    paddingTop: '12px',
     paddingBottom: '8px',
     color: global_Color_200.value,
   },
@@ -62,24 +60,24 @@ const useStyles = createUseStyles({
   },
 });
 
-const perPageKey = 'snapshotPerPage';
+const perPageKey = 'packagePerPage';
 
-export default function SnapshotListModal() {
-  const classes = useStyles();
-  const rootPath = useRootPath();
-  const { repoUUID: uuid = '' } = useParams();
+export default function SnapshotPackageModal() {
   const { contentOrigin } = useAppContext();
+  const classes = useStyles();
+  const { repoUUID: uuid } = useParams();
+  const rootPath = useRootPath();
   const navigate = useNavigate();
   const storedPerPage = Number(localStorage.getItem(perPageKey)) || 20;
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(storedPerPage);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSortIndex, setActiveSortIndex] = useState<number>(0);
-  const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  const columnHeaders = ['Snapshots', 'Change', 'Packages', 'Errata', 'Config'];
+  const columnHeaders = ['Name', 'Version', 'Release', 'Arch'];
 
-  const columnSortAttributes = ['created_at'];
+  const columnSortAttributes = ['name', 'version', 'release', 'arch'];
 
   const sortString = useMemo(
     () => columnSortAttributes[activeSortIndex] + ':' + activeSortDirection,
@@ -97,9 +95,7 @@ export default function SnapshotListModal() {
     isFetching,
     isError,
     data = { data: [], meta: { count: 0, limit: 20, offset: 0 } },
-  } = useGetSnapshotList(uuid as string, page, perPage, debouncedSearchQuery, sortString);
-
-  const { data: contentData } = useFetchContent([uuid]);
+  } = useGetPackagesQuery(uuid as string, page, perPage, debouncedSearchQuery, sortString);
 
   useEffect(() => {
     if (isError) {
@@ -110,19 +106,18 @@ export default function SnapshotListModal() {
   const onSetPage = (_, newPage) => setPage(newPage);
 
   const onPerPageSelect = (_, newPerPage, newPage) => {
-    // Save this value through page refresh for use on next reload
     setPerPage(newPerPage);
     setPage(newPage);
     localStorage.setItem(perPageKey, newPerPage.toString());
   };
 
   const sortParams = (columnIndex: number, isDisabled: boolean): ThProps['sort'] | undefined => {
-    if (isDisabled || !columnSortAttributes[columnIndex]) return;
+    if (isDisabled) return;
     return {
       sortBy: {
         index: activeSortIndex,
         direction: activeSortDirection,
-        defaultDirection: 'desc', // starting sort direction when first sorting a column. Defaults to 'desc'
+        defaultDirection: 'asc',
       },
       onSort: (_event, index, direction) => {
         setActiveSortIndex(index);
@@ -136,7 +131,7 @@ export default function SnapshotListModal() {
     navigate(rootPath + (contentOrigin === ContentOrigin.REDHAT ? `?origin=${contentOrigin}` : ''));
 
   const {
-    data: snapshotsList = [],
+    data: packageList = [],
     meta: { count = 0 },
   } = data;
 
@@ -149,20 +144,12 @@ export default function SnapshotListModal() {
       key={uuid}
       position='top'
       hasNoBodyWrapper
-      aria-label='Snapshot list modal'
-      ouiaId='snapshot_list_modal'
+      aria-label='RPM package modal'
+      ouiaId='rpm_package_modal'
       ouiaSafe={fetchingOrLoading}
       variant={ModalVariant.medium}
-      title='Snapshots'
-      description={
-        <p className={classes.description}>
-          View list of snapshots for{' '}
-          {contentData?.name ? <b>{contentData?.name}</b> : 'a repository'}.
-          {/* You may select snapshots to delete them.
-          <br />
-          You may also view the snapshot comparisons <b>here</b>. */}
-        </p>
-      }
+      title='Snapshot detail'
+      // description={<p className={classes.description}>Here are the snapshot details below</p>}
       isOpen
       onClose={onClose}
       footer={
@@ -177,11 +164,10 @@ export default function SnapshotListModal() {
             <InputGroupItem>
               <TextInput
                 id='search'
-                type='text'
                 ouiaId='name_search'
-                placeholder='Search snapshot'
+                placeholder='Filter by name'
                 value={searchQuery}
-                onChange={(_, value) => setSearchQuery(value)}
+                onChange={(_event, value) => setSearchQuery(value)}
               />
               <InputGroupText id='search-icon'>
                 <SearchIcon />
@@ -210,7 +196,7 @@ export default function SnapshotListModal() {
             </Grid>
           </Hide>
           <Hide hide={fetchingOrLoading}>
-            <Table aria-label='snapshot list table' ouiaId='snapshot_list_table' variant='compact'>
+            <Table aria-label='Custom repositories table' ouiaId='packages_table' variant='compact'>
               <Hide hide={loadingOrZeroCount}>
                 <Thead>
                   <Tr>
@@ -225,46 +211,18 @@ export default function SnapshotListModal() {
                   </Tr>
                 </Thead>
               </Hide>
+              <Hide hide={!fetchingOrLoading}>
+                <EmptyPackageState clearSearch={() => setSearchQuery('')} />
+              </Hide>
               <Tbody>
-                {snapshotsList.map(
-                  (
-                    {
-                      uuid: snap_uuid,
-                      created_at,
-                      content_counts,
-                      added_counts,
-                      removed_counts,
-                    }: SnapshotItem,
-                    index: number,
-                  ) => (
-                    <Tr key={created_at + index}>
-                      <Td>{new Date(created_at).toUTCString()}</Td>
-                      <Td>
-                        <ChangedArrows
-                          addedCount={
-                            (added_counts?.['rpm.package'] || 0)
-                          }
-                          removedCount={
-                            (removed_counts?.['rpm.package'] || 0)
-                          }
-                        />
-                      </Td>
-                      <Td>
-                        <Button
-                          variant='link'
-                          isInline
-                          onClick={() => navigate(`${rootPath}/${uuid}/snapshots/${snap_uuid}`)}
-                        >
-                          {content_counts?.['rpm.package'] || 0}
-                        </Button>
-                      </Td>
-                      <Td>{content_counts?.['rpm.advisory'] || 0}</Td>
-                      <Td>
-                        <RepoConfig repoUUID={uuid} snapUUID={snap_uuid} />
-                      </Td>
-                    </Tr>
-                  ),
-                )}
+                {packageList.map(({ name, version, release, arch }: PackageItem, index: number) => (
+                  <Tr key={name + index}>
+                    <Td>{name}</Td>
+                    <Td>{version}</Td>
+                    <Td>{release}</Td>
+                    <Td>{arch}</Td>
+                  </Tr>
+                ))}
                 <Hide hide={!loadingOrZeroCount}>
                   <EmptyPackageState clearSearch={() => setSearchQuery('')} />
                 </Hide>
