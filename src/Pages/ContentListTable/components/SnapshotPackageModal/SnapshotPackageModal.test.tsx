@@ -55,7 +55,7 @@ it('Render 1 item', () => {
   expect(queryByText(packageItem.arch)).toBeInTheDocument();
   waitFor(() => {
     fireEvent.click(getByText('Close'));
-    expect(queryByText('Snapshot detail')).toBeInTheDocument();
+    expect(queryByText('Snapshot detail')).not.toBeInTheDocument();
   });
 });
 
