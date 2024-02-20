@@ -144,8 +144,8 @@ export default function SnapshotPackageModal() {
       key={uuid}
       position='top'
       hasNoBodyWrapper
-      aria-label='RPM package modal'
-      ouiaId='rpm_package_modal'
+      aria-label='snapshot package modal'
+      ouiaId='snapshot package modal'
       ouiaSafe={fetchingOrLoading}
       variant={ModalVariant.medium}
       title='Snapshot detail'
