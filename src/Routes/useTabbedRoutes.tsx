@@ -9,7 +9,7 @@ import PackageModal from '../Pages/ContentListTable/components/PackageModal/Pack
 import PopularRepositoriesTable from '../Pages/PopularRepositoriesTable/PopularRepositoriesTable';
 import { useAppContext } from '../middleware/AppContext';
 import SnapshotListModal from '../Pages/ContentListTable/components/SnapshotListModal/SnapshotListModal';
-import SnapshotPackageModal from '../Pages/ContentListTable/components/SnapshotPackageModal/SnapshotPackageModal';
+import SnapshotPackageModal from '../Pages/ContentListTable/components/SnapshotDetailsModal/SnapshotDetailsModal';
 
 export const DEFAULT_ROUTE = '';
 export const POPULAR_REPOSITORIES_ROUTE = 'popular-repositories';

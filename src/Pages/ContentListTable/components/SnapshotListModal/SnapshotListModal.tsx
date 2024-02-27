@@ -241,12 +241,8 @@ export default function SnapshotListModal() {
                       <Td>{new Date(created_at).toUTCString()}</Td>
                       <Td>
                         <ChangedArrows
-                          addedCount={
-                            (added_counts?.['rpm.package'] || 0)
-                          }
-                          removedCount={
-                            (removed_counts?.['rpm.package'] || 0)
-                          }
+                          addedCount={added_counts?.['rpm.package'] || 0}
+                          removedCount={removed_counts?.['rpm.package'] || 0}
                         />
                       </Td>
                       <Td>
