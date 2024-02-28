@@ -40,9 +40,9 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
     (async () => {
       const fetchedFeatures = await fetchFeatures();
       // Disable snapshotting in prod stable
-      if (chrome.isProd() && !chrome.isBeta() && fetchedFeatures?. snapshots?.accessible) {
+      if (chrome.isProd() && !chrome.isBeta() && fetchedFeatures?.snapshots?.accessible) {
         if (fetchedFeatures !== null && fetchedFeatures.snapshots !== undefined) {
-          fetchedFeatures.snapshots.accessible = false
+          fetchedFeatures.snapshots.accessible = false;
         }
       }
       setFeatures(fetchedFeatures);
