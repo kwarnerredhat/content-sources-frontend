@@ -17,6 +17,7 @@ import { useAppContext } from '../../../../middleware/AppContext';
 import { useState } from 'react';
 import { SnapshotPackagesTab } from './Tabs/SnapshotPackagesTab';
 import { createUseStyles } from 'react-jss';
+import { SnapshotSelector } from './SnapshotsSelector';
 
 const useStyles = createUseStyles({
   modalBody: {
@@ -25,6 +26,7 @@ const useStyles = createUseStyles({
   topContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    padding: '24px 0',
   },
 });
 
@@ -69,7 +71,7 @@ export default function SnapshotDetailsModal() {
       <InnerScrollContainer>
         <Stack className={classes.modalBody}>
           <StackItem className={classes.topContainer}>
-            <Grid />
+            <SnapshotSelector />
             <Button variant='secondary' onClick={onBackClick}>
               View all snapshots
             </Button>
